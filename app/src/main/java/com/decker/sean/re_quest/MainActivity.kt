@@ -28,7 +28,7 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavRoutes(navController = navController)
 
-                    Greeting("Android")
+                    Greeting("Android123")
 
                 } // Ends Surface
             } // Ends Theme
