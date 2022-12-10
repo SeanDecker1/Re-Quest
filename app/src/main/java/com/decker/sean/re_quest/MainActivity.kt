@@ -10,6 +10,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.decker.sean.re_quest.navigation.NavRoutes
 import com.decker.sean.re_quest.ui.theme.ReQuestTheme
 
 class MainActivity : ComponentActivity() {
@@ -22,12 +24,17 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
+
+                    val navController = rememberNavController()
+                    NavRoutes(navController = navController)
+
                     Greeting("Android")
-                }
-            }
-        }
-    }
-}
+
+                } // Ends Surface
+            } // Ends Theme
+        } // Ends setContent
+    } // Ends onCreate
+} // Ends MainActivity
 
 @Composable
 fun Greeting(name: String) {
