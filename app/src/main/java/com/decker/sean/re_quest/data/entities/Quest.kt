@@ -6,15 +6,20 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "quest")
 data class Quest(
+
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    val quest_id: Int = 0,
 
-    @ColumnInfo(name = "questName")
-    val questName: String?,
+    @ColumnInfo(name = "quest_name")
+    val quest_name: String?,
 
-    @ColumnInfo(name = "questDescription")
-    val questDescription: String?,
+    @ColumnInfo(name = "quest_description")
+    val quest_description: String?,
 
-    @ColumnInfo(name = "questDetails")
-    val questDetails: List<QuestDetail>?
-)
+    @ColumnInfo(name = "quest_visible")
+    val quest_visible: Int?,
+
+    @ColumnInfo(name = "quest_completed")
+    val quest_completed: Int?,
+
+) // Ends data class
