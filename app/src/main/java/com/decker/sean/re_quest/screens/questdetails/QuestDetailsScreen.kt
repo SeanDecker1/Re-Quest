@@ -14,13 +14,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun QuestDetailsScreen() {
+fun QuestDetailsScreen(questName: String?) {
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White),
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
@@ -31,7 +31,7 @@ fun QuestDetailsScreen() {
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Quest Details Screen",
+                text = "Quest Details Screen for: $questName",
                 fontSize = MaterialTheme.typography.h3.fontSize,
                 fontWeight = FontWeight.Bold
             ) // Ends Text
