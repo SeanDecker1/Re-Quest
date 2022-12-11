@@ -2,7 +2,6 @@ package com.decker.sean.re_quest.screens.questlist
 
 import android.annotation.SuppressLint
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,28 +17,20 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.outlined.HistoryEdu
-import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 import com.decker.sean.re_quest.R
 import com.decker.sean.re_quest.composable.AddQuestDialog
-import com.decker.sean.re_quest.composable.QuestList
 import com.decker.sean.re_quest.data.entities.Quest
 import com.decker.sean.re_quest.models.QuestViewModel
 import com.decker.sean.re_quest.navigation.Screens
-import com.decker.sean.re_quest.ui.theme.ReQuestTheme
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
