@@ -6,12 +6,13 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.decker.sean.re_quest.models.QuestViewModel
 import com.decker.sean.re_quest.screens.login.LoginScreen
 import com.decker.sean.re_quest.screens.questdetails.QuestDetailsScreen
 import com.decker.sean.re_quest.screens.questlist.QuestListScreen
 
 @Composable
-fun NavRoutes(navController: NavHostController) {
+fun NavRoutes(questViewModel: QuestViewModel, navController: NavHostController) {
 
     NavHost(
         navController = navController,
@@ -23,7 +24,7 @@ fun NavRoutes(navController: NavHostController) {
         }
 
         composable(route = Screens.QuestListScreen.route) {
-            QuestListScreen(navController)
+            QuestListScreen(questViewModel = questViewModel, navController = navController)
         }
 
         composable(

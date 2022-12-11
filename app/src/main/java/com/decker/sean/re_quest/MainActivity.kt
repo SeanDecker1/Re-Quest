@@ -10,13 +10,18 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.rememberNavController
+import com.decker.sean.re_quest.models.QuestViewModel
 import com.decker.sean.re_quest.navigation.NavRoutes
 import com.decker.sean.re_quest.ui.theme.ReQuestTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val questViewModel = ViewModelProvider(this).get(QuestViewModel::class.java)
+
         setContent {
             ReQuestTheme {
                 // A surface container using the 'background' color from the theme
@@ -26,7 +31,7 @@ class MainActivity : ComponentActivity() {
                 ) {
 
                     val navController = rememberNavController()
-                    NavRoutes(navController = navController)
+                    NavRoutes(questViewModel = questViewModel, navController = navController)
 
                 } // Ends Surface
             } // Ends Theme
