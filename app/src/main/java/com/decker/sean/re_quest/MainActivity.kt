@@ -28,23 +28,17 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavRoutes(navController = navController)
 
-                    Greeting("Android")
-
                 } // Ends Surface
             } // Ends Theme
         } // Ends setContent
     } // Ends onCreate
 } // Ends MainActivity
 
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
 
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     ReQuestTheme {
-        Greeting("Android")
+
     }
 }
