@@ -21,6 +21,9 @@ import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.outlined.HistoryEdu
 import androidx.compose.ui.res.painterResource
 import androidx.compose.foundation.Image
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -60,7 +63,7 @@ fun QuestListScreen(questViewModel: QuestViewModel, navController: NavController
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp),
+                .padding(start = 8.dp, top = 8.dp, end = 4.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -70,23 +73,13 @@ fun QuestListScreen(questViewModel: QuestViewModel, navController: NavController
                 fontWeight = FontWeight.Bold
             ) // Ends Text
 
-            Button(
+            IconButton(
                 onClick = { showDialog.value = true },
-                shape = CircleShape,
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.White, contentColor = Color.Black),
-                modifier = Modifier.size(width = 45.dp, height = 45.dp),
-                contentPadding = PaddingValues(all = 0.dp),
-                elevation = ButtonDefaults.elevation(
-                    defaultElevation = 0.dp
-                )
             ) {
                 // Inner content including an icon and a text label
                 Icon(
                     Icons.Rounded.Add,
                     contentDescription = "Add New Quest",
-                    modifier = Modifier
-                        .padding(0.dp)
-                        .size(24.dp)
                 ) // Ends Icon
             } // Ends Button
         }// Ends Row
@@ -104,7 +97,7 @@ fun QuestListScreen(questViewModel: QuestViewModel, navController: NavController
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 75.dp, start = 8.dp),
+                .padding(top = 75.dp, start = 8.dp, end = 8.dp),
         ) {
             items(
                 // Switched with uncommented version
@@ -130,7 +123,7 @@ fun QuestCard(currentQuest: Quest, navController: NavController, coverArt: Int){
     Card(
         shape = MaterialTheme.shapes.medium,
         modifier = Modifier
-            .fillMaxWidth(.5f)
+            .fillMaxWidth()
             .padding(bottom = 20.dp),
         onClick = {
             // Switched with uncommented version
@@ -199,6 +192,16 @@ fun QuestCard(currentQuest: Quest, navController: NavController, coverArt: Int){
 @Composable
 fun TopBar(){
     TopAppBar(
+
+
+        actions = {
+            IconButton(onClick = {
+
+            }) {
+                Icon(Icons.Filled.AccountCircle, "")
+            }
+        },
+
         title = {Text(text = "Re-Quest", fontSize = 18.sp)},
         backgroundColor = MaterialTheme.colors.primary,
         contentColor = Color.Black,
