@@ -32,6 +32,7 @@ import com.decker.sean.re_quest.composable.AddQuestDialog
 import com.decker.sean.re_quest.data.entities.Quest
 import com.decker.sean.re_quest.models.QuestViewModel
 import com.decker.sean.re_quest.navigation.Screens
+import java.util.*
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -54,6 +55,8 @@ fun QuestListScreen(questViewModel: QuestViewModel, navController: NavController
     }
 
     val dummyViewModel = arrayListOf(listOf("My First Quest", R.drawable.tree), listOf("Dungeon Quest 2", R.drawable.dragon), listOf("Castle Raid", R.drawable.grimes_art))
+
+    val coverArtList = arrayListOf(R.drawable.tree, R.drawable.dragon, R.drawable.grimes_art)
 
     val showDialog = remember { mutableStateOf(false) }
 
@@ -114,18 +117,28 @@ fun QuestListScreen(questViewModel: QuestViewModel, navController: NavController
 
         Spacer(modifier = Modifier.padding(36.dp))
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 75.dp, start = 8.dp),
-        ) {
-            items(
-                items = questList.value,
-                itemContent = {
-                    QuestCard(currentQuest = it, navController = navController, coverArt = R.drawable.tree)
-                }
-            ) // Ends items
-        } // Ends LazyColumn
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 75.dp, start = 8.dp),
+            ) {
+                items(
+                    items = questList.value,
+                    itemContent = {
+
+                        val random = Random()
+                        val number = random.nextInt(3) //+ 1
+
+                        Row(modifier = Modifier.fillMaxWidth().padding(end = 10.dp)) {
+                            QuestCard(
+                                currentQuest = it,
+                                navController = navController
+                                //coverArtList[number]//R.drawable.tree
+                            )
+                        }
+                    }
+                ) // Ends items
+            } // Ends LazyColumn
 
     } // Ends Scaffold
 
@@ -133,12 +146,22 @@ fun QuestListScreen(questViewModel: QuestViewModel, navController: NavController
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun QuestCard(currentQuest: Quest, navController: NavController, coverArt: Int){
+fun QuestCard(currentQuest: Quest, navController: NavController){
+
+    var coverArt = R.drawable.dragon
+
+    if (currentQuest.quest_theme == "Dungeon") {
+        coverArt = R.drawable.dragon
+    } else if (currentQuest.quest_theme == "Castle") {
+        coverArt = R.drawable.grimes_art
+    } else if (currentQuest.quest_theme == "Nature") {
+        coverArt = R.drawable.tree
+    }
 
     Card(
         shape = MaterialTheme.shapes.medium,
         modifier = Modifier
-            .fillMaxWidth(.5f)
+            //.fillMaxWidth(.5f)
             .padding(bottom = 20.dp),
         onClick = {
             navController.navigate(Screens.QuestScreen.withArgs(currentQuest.quest_id)) {

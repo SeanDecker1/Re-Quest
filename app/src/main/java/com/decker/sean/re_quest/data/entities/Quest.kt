@@ -22,4 +22,7 @@ data class Quest(
     @ColumnInfo(name = "quest_completed")
     val quest_completed: Int?,
 
+    @ColumnInfo(name = "quest_theme")
+    val quest_theme: String?
+
 ) // Ends data class

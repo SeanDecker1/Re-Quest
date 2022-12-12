@@ -42,11 +42,19 @@ fun AddQuestDialog(questViewModel: QuestViewModel, setShowDialog: (Boolean) -> U
     var questNameTxtField by remember { mutableStateOf("") }
     var questDescriptionTxtField by remember { mutableStateOf("") }
 
+    // For visibility radio
     val radioOptions = listOf("Yes", "No")
     var selectedRadioItem by remember {
         mutableStateOf(radioOptions[0])
     }
     var selectedVisibility = 0
+
+    // For theme radio
+    val themeOptions = listOf("Dungeon", "Castle", "Nature")
+    var selectedThemeItem by remember {
+        mutableStateOf(themeOptions[0])
+    }
+    var selectedTheme = "Dungeon"
 
     Dialog(
         onDismissRequest = { setShowDialog(false) },
@@ -207,6 +215,38 @@ fun AddQuestDialog(questViewModel: QuestViewModel, setShowDialog: (Boolean) -> U
                             } // Ends radioOptions.forEach
                         } // Ends radio button column
 
+                        // Theme radio buttons
+                        Column(modifier = Modifier.selectableGroup()) {
+
+                            Text(
+                                text = "Theme:",
+                                modifier = Modifier.padding(5.dp),
+                                fontSize = 24.sp
+                            ) // Ends Text
+
+                            themeOptions.forEach { label ->
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(56.dp)
+                                        .selectable(
+                                            selected = (selectedThemeItem == label),
+                                            onClick = { selectedThemeItem = label },
+                                            role = Role.RadioButton
+                                        )
+                                        .padding(horizontal = 16.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    RadioButton(
+                                        modifier = Modifier.padding(end = 16.dp),
+                                        selected = (selectedThemeItem == label),
+                                        onClick = null
+                                    )
+                                    Text(text = label)
+                                } // Row
+                            } // Ends themeOptions.forEach
+                        } // Ends radio button column
+
                     } // Ends Column of Text Fields and Radio Buttons
 
                 } // Ends Column with Top Row and Text Fields
@@ -241,13 +281,22 @@ fun AddQuestDialog(questViewModel: QuestViewModel, setShowDialog: (Boolean) -> U
                                 selectedVisibility = 0
                             } // Ends if
 
+                            if (selectedThemeItem == "Dungeon") {
+                                selectedTheme = "Dungeon"
+                            } else if (selectedThemeItem == "Castle") {
+                                selectedTheme = "Castle"
+                            } else if (selectedThemeItem == "Nature") {
+                                selectedTheme = "Nature"
+                            } // Ends if
+
                             // Create and insert quest
                             questViewModel.insertQuest(
                                 Quest(
                                     quest_name = questNameTxtField,
                                     quest_description = questDescriptionTxtField,
                                     quest_visible = selectedVisibility,
-                                    quest_completed = 0
+                                    quest_completed = 0,
+                                    quest_theme = selectedTheme
                                 )
                             ) // Ends insert
                             setShowDialog(false)
