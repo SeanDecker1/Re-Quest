@@ -111,6 +111,16 @@ fun QuestDetailsScreen(questViewModel: QuestViewModel, navController: NavControl
 @Composable
 fun QuestDetails(currentQuest: Quest, navController: NavController, questTasks: State<List<Task>>){
 
+    var coverArt = R.drawable.dragon
+
+    if (currentQuest.quest_theme == "Dungeon") {
+        coverArt = R.drawable.dragon
+    } else if (currentQuest.quest_theme == "Castle") {
+        coverArt = R.drawable.grimes_art
+    } else if (currentQuest.quest_theme == "Nature") {
+        coverArt = R.drawable.tree
+    }
+
         Column(modifier = Modifier
             .fillMaxSize(),
         ) {
@@ -119,7 +129,7 @@ fun QuestDetails(currentQuest: Quest, navController: NavController, questTasks: 
 //                .border(width = 2.dp, color = Color.Black)
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.dragon),
+                    painter = painterResource(id = coverArt),
                     contentDescription = "Cover",
                     modifier = Modifier
                         .height(130.dp)
