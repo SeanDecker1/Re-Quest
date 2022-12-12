@@ -37,16 +37,21 @@ fun NavRoutes(questViewModel: QuestViewModel, navController: NavHostController) 
         } // Ends QuestList nav
 
         composable(
-            route = Screens.QuestScreen.route+"/{questId}",
+            route = Screens.QuestScreen.route+"/{questId}/{userType}",
             arguments = listOf(
                 navArgument("questId"){
                     type = NavType.StringType
                     defaultValue = "0"
                     nullable = false
+                }, // Ends navArgument
+                navArgument("userType") {
+                    type = androidx.navigation.NavType.StringType
+                    defaultValue = "0"
+                    nullable = false
                 } // Ends navArgument
             ) // Ends arguments
         ) { entry ->
-            QuestDetailsScreen(questViewModel = questViewModel, navController = navController, questId = entry.arguments?.getString("questId"))
+            QuestDetailsScreen(questViewModel = questViewModel, navController = navController, questId = entry.arguments?.getString("questId"), userType = entry.arguments?.getString("userType"))
         } // Ends QuestDetailsScreen nav
 
     } // Ends NavHost

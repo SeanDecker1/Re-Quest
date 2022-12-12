@@ -3,6 +3,8 @@ package com.decker.sean.re_quest.composable
 import android.R
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -18,6 +20,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -34,24 +37,23 @@ import com.decker.sean.re_quest.models.QuestViewModel
 @Composable
 fun AddQuestTaskDialog(questViewModel: QuestViewModel, setShowDialog: (Boolean) -> Unit, currentQuestId: Int) {
 
-    // task_id
-    // task_name
-    // task_description
-    // task_quest
-    // task_visible
-    // task_completed
-
     var taskNameTxtFieldError by remember { mutableStateOf("") }
     var taskDescriptionTxtFieldError by remember { mutableStateOf("") }
     var taskNameTxtField by remember { mutableStateOf("") }
     var taskDescriptionTxtField by remember { mutableStateOf("") }
+
+    // For visibility radio
+    val radioOptions = listOf("Yes", "No")
+    var selectedRadioItem by remember {
+        mutableStateOf(radioOptions[0])
+    }
+    var selectedVisibility = 0
 
     Dialog(
         onDismissRequest = { setShowDialog(false) },
         properties = DialogProperties(
             usePlatformDefaultWidth = false
         )
-
     ) {
 
         Surface(
@@ -132,7 +134,7 @@ fun AddQuestTaskDialog(questViewModel: QuestViewModel, setShowDialog: (Boolean) 
                                 ) // Ends Icon
                             },
                             placeholder = { Text(text = taskNameTxtFieldError) },
-                            label = { Text(text = "Quest Name", style = TextStyle(color = Color.Black)) },
+                            label = { Text(text = "Task Name", style = TextStyle(color = Color.Black)) },
                             value = taskNameTxtField,
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                             onValueChange = {
@@ -158,7 +160,7 @@ fun AddQuestTaskDialog(questViewModel: QuestViewModel, setShowDialog: (Boolean) 
                                 ) // Ends Icon
                             },
                             placeholder = { Text(text = taskDescriptionTxtFieldError) },
-                            label = { Text(text = "Quest Description", style = TextStyle(color = Color.Black)) },
+                            label = { Text(text = "Task Description", style = TextStyle(color = Color.Black)) },
                             value = taskDescriptionTxtField,
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                             onValueChange = {
@@ -167,6 +169,41 @@ fun AddQuestTaskDialog(questViewModel: QuestViewModel, setShowDialog: (Boolean) 
                             singleLine = false,
                             minLines = 3
                         ) // Ends quest description text field
+
+                        Spacer(modifier = Modifier.height(20.dp))
+
+                        // Visibility radio buttons
+                        Column(modifier = Modifier.selectableGroup()) {
+
+                            Text(
+                                text = "Visible:",
+                                modifier = Modifier.padding(5.dp),
+                                fontSize = 24.sp
+                            ) // Ends Text
+
+                            radioOptions.forEach { label ->
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(56.dp)
+                                        .selectable(
+                                            selected = (selectedRadioItem == label),
+                                            onClick = { selectedRadioItem = label },
+                                            role = Role.RadioButton
+                                        )
+                                        .padding(horizontal = 16.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    RadioButton(
+                                        modifier = Modifier.padding(end = 16.dp),
+                                        selected = (selectedRadioItem == label),
+                                        onClick = null
+                                    )
+                                    Text(text = label)
+                                } // Row
+                            } // Ends radioOptions.forEach
+                        } // Ends radio button column
+
                     }
 
 
@@ -196,13 +233,19 @@ fun AddQuestTaskDialog(questViewModel: QuestViewModel, setShowDialog: (Boolean) 
                                     return@Button
                                 } // Ends if
 
+                                if (selectedRadioItem == "Yes") {
+                                    selectedVisibility = 1
+                                } else if (selectedRadioItem == "No") {
+                                    selectedVisibility = 0
+                                } // Ends if
+
                                 // Create and insert task
                                 questViewModel.insertTask(
                                     Task(
                                         task_name = taskNameTxtField,
                                         task_description = taskDescriptionTxtField,
                                         task_quest = currentQuestId,
-                                        task_visible = 0,
+                                        task_visible = selectedVisibility,
                                         task_completed = 0
                                     )
                                 ) // Ends insert
