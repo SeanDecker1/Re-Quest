@@ -116,7 +116,7 @@ fun QuestDetails(currentQuest: Quest, navController: NavController, questTasks: 
     if (currentQuest.quest_theme == "Dungeon") {
         coverArt = R.drawable.dragon
     } else if (currentQuest.quest_theme == "Castle") {
-        coverArt = R.drawable.grimes_art
+        coverArt = R.drawable.castle
     } else if (currentQuest.quest_theme == "Nature") {
         coverArt = R.drawable.tree
     }
