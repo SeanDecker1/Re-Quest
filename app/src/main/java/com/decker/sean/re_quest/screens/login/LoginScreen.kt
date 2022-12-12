@@ -49,7 +49,12 @@ fun LoginScreen(navController: NavController) {
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black),
                 modifier = Modifier.padding(5.dp),
                 onClick = {
-                    navController.navigate(Screens.QuestListScreen.route)
+                    navController.navigate(Screens.QuestListScreen.withStringArgs("gamemaster")) {
+                        popUpTo(Screens.QuestListScreen.route){
+                            inclusive = true
+                        }
+                    } // Ends nav
+                    //navController.navigate(Screens.QuestListScreen.route)
                 }
             ){
                 Text(
@@ -77,7 +82,12 @@ fun LoginScreen(navController: NavController) {
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black),
                 modifier = Modifier.padding(5.dp),
                 onClick = {
-                    navController.navigate(Screens.QuestListScreen.route)
+                    navController.navigate(Screens.QuestListScreen.withStringArgs("player")) {
+                        popUpTo(Screens.QuestListScreen.route){
+                            inclusive = true
+                        }
+                    } // Ends nav
+                    //navController.navigate(Screens.QuestListScreen.route)
                 }
             ){
                 Text(
