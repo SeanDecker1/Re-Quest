@@ -25,6 +25,11 @@ class QuestRepository(application: Application) {
     // Get a list of all quests that are set to visible (for players)
     val getAllVisibleQuests: LiveData<List<Quest>> = questDao.getAllVisibleQuests()
 
+    // Get one quest by id
+    fun getQuestById(quest_id: Int): LiveData<List<Quest>> {
+        return questDao.getQuestById(quest_id)
+    } // Ends getQuestById
+
     // Add a quest to the db
     suspend fun insertQuest(quest: Quest) {
         questDao.insertQuest(quest)
@@ -40,7 +45,10 @@ class QuestRepository(application: Application) {
     //
 
     // Get a list of all tasks for a quest (for game master)
-    suspend fun getAllTasksByQuestId(task_quest: Int): LiveData<List<Task>> = questDao.getAllTasksByQuestId(task_quest)
+    //suspend fun getAllTasksByQuestId(task_quest: Int): LiveData<List<Task>> = questDao.getAllTasksByQuestId(task_quest)
+    fun getAllTasksByQuestId(task_quest: Int): LiveData<List<Task>> {
+        return questDao.getAllTasksByQuestId(task_quest)
+    } // Ends getAllTasksByQuestId
 
     // Get a list of all tasks for a quest that are set to visible (for player)
     suspend fun getAllVisibleTasksByQuestId(task_quest: Int): LiveData<List<Task>> = questDao.getAllVisibleTasksByQuestId(task_quest)
