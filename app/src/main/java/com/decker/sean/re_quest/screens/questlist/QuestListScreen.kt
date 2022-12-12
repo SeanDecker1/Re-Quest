@@ -21,9 +21,13 @@ import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.outlined.HistoryEdu
 import androidx.compose.ui.res.painterResource
 import androidx.compose.foundation.Image
+
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.rounded.AccountCircle
+
+import androidx.compose.runtime.State
+
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,13 +41,26 @@ import com.decker.sean.re_quest.navigation.Screens
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun QuestListScreen(questViewModel: QuestViewModel, navController: NavController) {
+fun QuestListScreen(questViewModel: QuestViewModel, navController: NavController, userType: String?) {
 
-    //dummy View Model for now
-    val questListViewModel = arrayListOf(listOf("My First Quest", R.drawable.tree), listOf("Dungeon Quest 2", R.drawable.dragon), listOf("Castle Raid", R.drawable.grimes_art))
+    var isPlayer = true
+    var questList: State<List<Quest>>
 
-    // Real view model
-    val questList = questViewModel.getAllQuests().observeAsState(arrayListOf())
+    if (userType == "player") {
+        isPlayer = true
+    } else if (userType == "gamemaster") {
+        isPlayer = false
+    } // Ends userType if
+
+    // If user is a player, they only get to see quests marked as visible
+    if (isPlayer) {
+        questList = questViewModel.getAllVisibleQuests().observeAsState(arrayListOf())
+    } else {
+        questList = questViewModel.getAllQuests().observeAsState(arrayListOf())
+    }
+
+    val dummyViewModel = arrayListOf(listOf("My First Quest", R.drawable.tree), listOf("Dungeon Quest 2", R.drawable.dragon), listOf("Castle Raid", R.drawable.grimes_art))
+
     val showDialog = remember { mutableStateOf(false) }
 
     if (showDialog.value) {
@@ -73,26 +90,23 @@ fun QuestListScreen(questViewModel: QuestViewModel, navController: NavController
                 fontWeight = FontWeight.Bold
             ) // Ends Text
 
-            IconButton(
-                onClick = { showDialog.value = true },
-            ) {
-                // Inner content including an icon and a text label
-                Icon(
-                    Icons.Rounded.Add,
-                    contentDescription = "Add New Quest",
-                ) // Ends Icon
-            } // Ends Button
+
+            // Is user is a game master, they can see this add button
+            if (!isPlayer) {
+                IconButton(
+                    onClick = { showDialog.value = true },
+                ) {
+                    // Inner content including an icon and a text label
+                    Icon(
+                        Icons.Rounded.Add,
+                        contentDescription = "Add New Quest",
+                    ) // Ends Icon
+                } // Ends Button
+            } // Ends if
+
         }// Ends Row
 
         Spacer(modifier = Modifier.padding(36.dp))
-
-        //
-        // TEMP: Uncomment to view raw/basic list
-        //
-        //QuestList(questViewModel = questViewModel, navController = navController)
-        //
-        // TEMP
-        //
 
         LazyColumn(
             modifier = Modifier
@@ -100,11 +114,8 @@ fun QuestListScreen(questViewModel: QuestViewModel, navController: NavController
                 .padding(top = 75.dp, start = 8.dp, end = 8.dp),
         ) {
             items(
-                // Switched with uncommented version
-                //items = questListViewModel,
                 items = questList.value,
                 itemContent = {
-                    //QuestCard(currentQuest = it[0].toString(), navController = navController, coverArt = it[1] as Int)
                     QuestCard(currentQuest = it, navController = navController, coverArt = R.drawable.tree)
                 }
             ) // Ends items
@@ -116,8 +127,6 @@ fun QuestListScreen(questViewModel: QuestViewModel, navController: NavController
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-// Switched with uncommented version
-//fun QuestCard(currentQuest: String, navController: NavController, coverArt: Int){
 fun QuestCard(currentQuest: Quest, navController: NavController, coverArt: Int){
 
     Card(
@@ -126,8 +135,6 @@ fun QuestCard(currentQuest: Quest, navController: NavController, coverArt: Int){
             .fillMaxWidth()
             .padding(bottom = 20.dp),
         onClick = {
-            // Switched with uncommented version
-            //navController.navigate(Screens.QuestScreen.withArgs(currentQuest)) {
             navController.navigate(Screens.QuestScreen.withArgs(currentQuest.quest_id)) {
                 popUpTo(Screens.QuestScreen.route){
                     inclusive = true
@@ -172,8 +179,6 @@ fun QuestCard(currentQuest: Quest, navController: NavController, coverArt: Int){
                 ) // Ends Icon
 
                 Text(
-                    // Switched with uncommented version
-                    //text = currentQuest,
                     text = currentQuest.quest_name ?: "",
                     modifier = Modifier.padding(5.dp),
                     style = MaterialTheme.typography.button.copy(
