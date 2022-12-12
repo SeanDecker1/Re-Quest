@@ -21,25 +21,24 @@ fun NavRoutes(questViewModel: QuestViewModel, navController: NavHostController) 
 
         composable(route = Screens.LoginScreen.route) {
             LoginScreen(navController)
-        }
+        } // Ends LoginScreen nav
 
         composable(route = Screens.QuestListScreen.route) {
             QuestListScreen(questViewModel = questViewModel, navController = navController)
-        }
+        } // Ends QuestListScreen nav
 
         composable(
-            route = Screens.QuestScreen.route+"/{questName}",
+            route = Screens.QuestScreen.route+"/{questId}",
             arguments = listOf(
-                navArgument("questName"){
+                navArgument("questId"){
                     type = NavType.StringType
-                    defaultValue = ""
-                    nullable = true
-                }
-            )
-
+                    defaultValue = "0"
+                    nullable = false
+                } // Ends navArgument
+            ) // Ends arguments
         ) { entry ->
-            QuestDetailsScreen(questName = entry.arguments?.getString("questName"))
-        }
+            QuestDetailsScreen(questViewModel = questViewModel, navController = navController, questId = entry.arguments?.getString("questId"))
+        } // Ends QuestDetailsScreen nav
 
     } // Ends NavHost
 

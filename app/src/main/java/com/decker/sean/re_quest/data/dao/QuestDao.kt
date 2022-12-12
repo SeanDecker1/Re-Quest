@@ -23,6 +23,10 @@ interface QuestDao {
     @Query("SELECT * FROM quest WHERE quest_visible = 1")
     fun getAllVisibleQuests(): LiveData<List<Quest>>
 
+    // Get one quest by id
+    @Query("SELECT * FROM quest WHERE quest_id = :quest_id")
+    fun getQuestById(quest_id: Int): LiveData<List<Quest>>
+
     // Add a quest to the db
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertQuest(quest: Quest)

@@ -5,6 +5,9 @@ import androidx.lifecycle.*
 import com.decker.sean.re_quest.data.entities.Quest
 import com.decker.sean.re_quest.data.entities.Task
 import com.decker.sean.re_quest.data.repositories.QuestRepository
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class QuestViewModel(appObj: Application): AndroidViewModel(appObj) {
@@ -19,6 +22,11 @@ class QuestViewModel(appObj: Application): AndroidViewModel(appObj) {
     fun getAllVisibleQuests(): LiveData<List<Quest>> {
         return questRepository.getAllVisibleQuests
     } // Ends getAllVisibleQuests
+
+
+    fun getQuestById(quest_id: Int): LiveData<List<Quest>> {
+        return questRepository.getQuestById(quest_id)
+    } // Ends getQuestById
 
     // Add a quest to the db
     fun insertQuest(quest: Quest) {
@@ -39,11 +47,15 @@ class QuestViewModel(appObj: Application): AndroidViewModel(appObj) {
     //
 
     // Get a list of all tasks for a quest (for game master)
-    fun getAllTasksByQuestId(task_quest: Int) {
-        viewModelScope.launch {
-            questRepository.getAllTasksByQuestId(task_quest)
-        }
+    fun getAllTasksByQuestId(task_quest: Int): LiveData<List<Task>> {
+        return questRepository.getAllTasksByQuestId(task_quest)
     } // Ends getAllTasksByQuestId
+
+//    fun getAllTasksByQuestId(task_quest: Int) {
+//        viewModelScope.launch {
+//            questRepository.getAllTasksByQuestId(task_quest)
+//        }
+//    } // Ends getAllTasksByQuestId
 
     // Get a list of all tasks for a quest that are set to visible (for player)
 //    fun getAllVisibleTasksByQuestId(task_quest: Int) = viewModelScope.launch {
