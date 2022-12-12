@@ -8,7 +8,7 @@ import com.decker.sean.re_quest.data.dao.QuestDao
 import com.decker.sean.re_quest.data.entities.Quest
 import com.decker.sean.re_quest.data.entities.Task
 
-@Database(entities = [Quest::class, Task::class], version = 1, exportSchema = false)
+@Database(entities = [Quest::class, Task::class], version = 2, exportSchema = false)
 abstract class AppDatabase: RoomDatabase() {
 
     abstract fun questDao(): QuestDao
@@ -30,7 +30,7 @@ abstract class AppDatabase: RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "customers")
+                    "quests")
                     .build()
                 INSTANCE = instance
                 return instance
