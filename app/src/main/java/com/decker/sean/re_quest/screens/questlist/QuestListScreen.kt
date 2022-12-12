@@ -46,12 +46,15 @@ import java.util.*
 fun QuestListScreen(questViewModel: QuestViewModel, navController: NavController, userType: String?) {
 
     var isPlayer = true
+    var insideUserType = 0
     var questList: State<List<Quest>>
 
     if (userType == "player") {
         isPlayer = true
+        insideUserType = 0
     } else if (userType == "gamemaster") {
         isPlayer = false
+        insideUserType = 1
     } // Ends userType if
 
     // If user is a player, they only get to see quests marked as visible
@@ -78,7 +81,7 @@ fun QuestListScreen(questViewModel: QuestViewModel, navController: NavController
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White),
-        topBar = { TopBar() },
+        topBar = { TopBar(navController) },
     ) {
 
         Row(
@@ -120,7 +123,7 @@ fun QuestListScreen(questViewModel: QuestViewModel, navController: NavController
             items(
                 items = questList.value,
                 itemContent = {
-                    QuestCard(currentQuest = it, navController = navController)
+                    QuestCard(currentQuest = it, navController = navController, userType = insideUserType)
                 }
             ) // Ends items
         } // Ends LazyColumn
@@ -131,7 +134,7 @@ fun QuestListScreen(questViewModel: QuestViewModel, navController: NavController
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun QuestCard(currentQuest: Quest, navController: NavController){
+fun QuestCard(currentQuest: Quest, navController: NavController, userType: Int){
 
     var coverArt = R.drawable.dragon
 
@@ -149,7 +152,7 @@ fun QuestCard(currentQuest: Quest, navController: NavController){
             .fillMaxWidth()
             .padding(bottom = 20.dp),
         onClick = {
-            navController.navigate(Screens.QuestScreen.withArgs(currentQuest.quest_id)) {
+            navController.navigate(Screens.QuestScreen.withArgs(currentQuest.quest_id, userType)) {
                 popUpTo(Screens.QuestScreen.route){
                     inclusive = true
                 }
@@ -226,18 +229,15 @@ fun QuestCard(currentQuest: Quest, navController: NavController){
 } // Ends QuestCard
 
 @Composable
-fun TopBar(){
+fun TopBar(navController: NavController){
     TopAppBar(
-
-
         actions = {
             IconButton(onClick = {
-
+                navController.navigate(Screens.LoginScreen.route)
             }) {
                 Icon(Icons.Filled.AccountCircle, "")
             }
         },
-
         title = {Text(text = "Re-Quest", fontSize = 18.sp)},
         backgroundColor = MaterialTheme.colors.primary,
         contentColor = Color.Black,
