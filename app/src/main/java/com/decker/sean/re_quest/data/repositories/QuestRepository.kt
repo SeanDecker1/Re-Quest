@@ -51,7 +51,10 @@ class QuestRepository(application: Application) {
     } // Ends getAllTasksByQuestId
 
     // Get a list of all tasks for a quest that are set to visible (for player)
-    suspend fun getAllVisibleTasksByQuestId(task_quest: Int): LiveData<List<Task>> = questDao.getAllVisibleTasksByQuestId(task_quest)
+    //suspend fun getAllVisibleTasksByQuestId(task_quest: Int): LiveData<List<Task>> = questDao.getAllVisibleTasksByQuestId(task_quest)
+    fun getAllVisibleTasksByQuestId(task_quest: Int): LiveData<List<Task>> {
+        return questDao.getAllVisibleTasksByQuestId(task_quest)
+    } // Ends getAllVisibleTasksByQuestId
 
     // Add a task to the db
     suspend fun insertTask(task: Task) {

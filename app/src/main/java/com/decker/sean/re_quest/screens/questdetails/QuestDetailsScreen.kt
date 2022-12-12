@@ -34,20 +34,30 @@ import kotlinx.coroutines.*
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-//fun QuestDetailsScreen(questName: String?) {
-fun QuestDetailsScreen(questViewModel: QuestViewModel, navController: NavController, questId: String?) {
+fun QuestDetailsScreen(questViewModel: QuestViewModel, navController: NavController, questId: String?, userType: String?) {
+
+    var isPlayer = true
+    var selectedQuestTasks: State<List<Task>>
 
     val questtemp = questId ?: "0"
     val quest_id = questtemp.toInt()
 
+    if (userType == "0") {
+        isPlayer = true
+    } else if (userType == "1") {
+        isPlayer = false
+    } // Ends userType if
+
+    // If user is a player, they only get to see quests marked as visible
+    if (isPlayer) {
+        selectedQuestTasks = questViewModel.getAllVisibleTasksByQuestId(quest_id).observeAsState(arrayListOf())
+    } else {
+        selectedQuestTasks = questViewModel.getAllTasksByQuestId(quest_id).observeAsState(arrayListOf())
+    }
+
     val selectedQuest = questViewModel.getQuestById(quest_id).observeAsState(arrayListOf())
 
-    //val test = selectedQuest.value
-    val selectedQuestTasks = questViewModel.getAllTasksByQuestId(quest_id).observeAsState(arrayListOf())
-
     val showDialog = remember { mutableStateOf(false) }
-
-
 
     if (showDialog.value) {
         AddQuestTaskDialog(
@@ -63,37 +73,9 @@ fun QuestDetailsScreen(questViewModel: QuestViewModel, navController: NavControl
             .background(Color.White),
 
         topBar = {
-            TopBarDetails(currentQuest = selectedQuest, navController = navController, showDialog = showDialog)
+            TopBarDetails(currentQuest = selectedQuest, navController = navController, showDialog = showDialog, userType = userType)
         }
     ) {
-
-//        Row(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(8.dp),
-//            horizontalArrangement = Arrangement.SpaceBetween,
-//            verticalAlignment = Alignment.CenterVertically
-//        ) {
-//
-//            Text(
-//                text = "Tasks",
-//                fontSize = MaterialTheme.typography.h4.fontSize,
-//                fontWeight = FontWeight.Bold
-//            ) // Ends Text
-//
-//            IconButton(
-//                onClick = { showDialog.value = true },
-//            ) {
-//                // Inner content including an icon and a text label
-//                Icon(
-//                    Icons.Rounded.Add,
-//                    contentDescription = "Add New Task",
-//                ) // Ends Icon
-//            } // Ends Button
-//
-//
-//
-//        }// Ends Row
 
         Column() {
             LazyColumn(
@@ -115,14 +97,11 @@ fun QuestDetailsScreen(questViewModel: QuestViewModel, navController: NavControl
                 items(
                     items = selectedQuestTasks.value,
                     itemContent = {
-                        TaskRow(task = it)
+                        TaskRow(task = it, userType = userType, questViewModel = questViewModel)
                     }
                 ) // Ends items
             }
         }
-
-
-
 
     } // Ends Scaffold
 
@@ -159,14 +138,12 @@ fun QuestDetails(currentQuest: Quest, navController: NavController, questTasks: 
 
             }
 
-
-
         } // Ends Column
 
 } // Ends QuestDetails
 
 @Composable
-fun TaskRow(task: Task){
+fun TaskRow(task: Task, userType: String?, questViewModel: QuestViewModel){
 
     Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp)) {
         Row(
@@ -187,15 +164,22 @@ fun TaskRow(task: Task){
                 task.task_name?.let { Text(text = it) }
             }
 
-            IconButton(
-                onClick = { /*TODO*/ },
-            ) {
-                // Inner content including an icon and a text label
-                Icon(
-                    Icons.Outlined.Delete,
-                    contentDescription = "Delete",
-                ) // Ends Icon
-            } // Ends Button
+            if (userType == "1") {
+
+                IconButton(
+                    onClick = {
+                          questViewModel.deleteTaskById(task.task_id)
+                    },
+                ) {
+                    // Inner content including an icon and a text label
+                    Icon(
+                        Icons.Outlined.Delete,
+                        contentDescription = "Delete",
+                    ) // Ends Icon
+                } // Ends Button
+
+            } // Ends userType if
+
         }
         task.task_description?.let {
             Text(
@@ -212,7 +196,18 @@ fun TaskRow(task: Task){
 }
 
 @Composable
-fun TopBarDetails(currentQuest: State<List<Quest>>, navController: NavController, showDialog: MutableState<Boolean>){
+fun TopBarDetails(currentQuest: State<List<Quest>>, navController: NavController, showDialog: MutableState<Boolean>, userType: String?){
+
+    var isPlayer = true
+    var insideUserType = "player"
+    if (userType == "0") {
+        isPlayer = true
+        insideUserType = "player"
+    } else if (userType == "1") {
+        isPlayer = false
+        insideUserType = "gamemaster"
+    } // Ends userType if
+
     TopAppBar(
 //        title = {
 //            if (currentQuest != null) {
@@ -221,21 +216,26 @@ fun TopBarDetails(currentQuest: State<List<Quest>>, navController: NavController
 //        },
         navigationIcon = {
             IconButton(onClick = {
-                navController.navigate(Screens.QuestListScreen.route){
+                navController.navigate(Screens.QuestListScreen.withStringArgs(insideUserType)) {
                     popUpTo(Screens.QuestListScreen.route){
                         inclusive = true
                     }
-                }
+                } // Ends nav
             }) {
                 Icon(Icons.Filled.ArrowBack, "")
             }
         },
         actions = {
-            IconButton(onClick = {
-                showDialog.value = true
-            }) {
-                Icon(Icons.Rounded.Add, "")
+
+            if (!isPlayer) {
+                IconButton(onClick = {
+                    showDialog.value = true
+                }) {
+                    Icon(Icons.Rounded.Add, "")
+                }
             }
+
+
         },
         title = {
             LazyColumn(
