@@ -64,10 +64,6 @@ fun QuestListScreen(questViewModel: QuestViewModel, navController: NavController
         questList = questViewModel.getAllQuests().observeAsState(arrayListOf())
     }
 
-    val dummyViewModel = arrayListOf(listOf("My First Quest", R.drawable.tree), listOf("Dungeon Quest 2", R.drawable.dragon), listOf("Castle Raid", R.drawable.grimes_art))
-
-    val coverArtList = arrayListOf(R.drawable.tree, R.drawable.dragon, R.drawable.grimes_art)
-
     val showDialog = remember { mutableStateOf(false) }
 
     if (showDialog.value) {
@@ -140,7 +136,7 @@ fun QuestCard(currentQuest: Quest, navController: NavController, userType: Int, 
     if (currentQuest.quest_theme == "Dungeon") {
         coverArt = R.drawable.dragon
     } else if (currentQuest.quest_theme == "Castle") {
-        coverArt = R.drawable.grimes_art
+        coverArt = R.drawable.castle
     } else if (currentQuest.quest_theme == "Nature") {
         coverArt = R.drawable.tree
     }
