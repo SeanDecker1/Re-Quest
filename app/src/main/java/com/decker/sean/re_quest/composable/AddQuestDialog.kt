@@ -79,7 +79,9 @@ fun AddQuestDialog(questViewModel: QuestViewModel, setShowDialog: (Boolean) -> U
 
                 //Column With New Quest Bar and Text Fields
                 //The .weight(1f, false) is an important property so this column doesn't override the bottom save button
-                Column(modifier = Modifier.padding(10.dp).weight(1f, false)) {
+                Column(modifier = Modifier
+                    .padding(10.dp)
+                    .weight(1f, false)) {
 
                     //New Quest and Close Button top Row
                     Row(
@@ -111,16 +113,12 @@ fun AddQuestDialog(questViewModel: QuestViewModel, setShowDialog: (Boolean) -> U
                             ) // Ends Text
                         } // Ends Row
 
-                        Icon(
-                            imageVector = Icons.Filled.Cancel,
-                            contentDescription = "",
-                            tint = colorResource(R.color.darker_gray),
-                            modifier = Modifier
-                                .width(30.dp)
-                                .height(30.dp)
-                                .clickable { setShowDialog(false) }
-                        ) // Ends Icon
-
+                        IconButton(onClick = { setShowDialog(false) }) {
+                            Icon(
+                                imageVector = Icons.Filled.Cancel,
+                                contentDescription = "",
+                            )
+                        }
                     } // Ends top Row
 
                     //Text Fields Column
@@ -252,7 +250,9 @@ fun AddQuestDialog(questViewModel: QuestViewModel, setShowDialog: (Boolean) -> U
                 } // Ends Column with Top Row and Text Fields
 
                 //Save Quest Button Box
-                Box(modifier = Modifier.padding(40.dp, 0.dp, 40.dp, 10.dp).height(50.dp)) {
+                Box(modifier = Modifier
+                    .padding(40.dp, 0.dp, 40.dp, 10.dp)
+                    .height(50.dp)) {
 
                     Button(
                         onClick = {
@@ -263,12 +263,12 @@ fun AddQuestDialog(questViewModel: QuestViewModel, setShowDialog: (Boolean) -> U
 
                             // Validate quest name
                             if (!checkQuestName(questNameTxtField)) {
-                                questNameTxtFieldError = "Invalid input for quest name."
+                                questNameTxtFieldError = "Enter a valid input for quest name."
                             } // Ends if
 
                             // Validate quest description
                             if (!checkQuestDescription(questDescriptionTxtField)) {
-                                questDescriptionTxtFieldError = "Invalid input for quest description."
+                                questDescriptionTxtFieldError = "Enter a valid input for quest description."
                             } // Ends if
 
                             if (questNameTxtFieldError.isNotEmpty() || questDescriptionTxtFieldError.isNotEmpty()) {
@@ -324,6 +324,7 @@ fun AddQuestDialog(questViewModel: QuestViewModel, setShowDialog: (Boolean) -> U
 
 } // Ends AddQuestDialog
 
-fun checkQuestName(name: String): Boolean = name.split(' ').all { !it.isEmpty()  }
+fun checkQuestName(name: String): Boolean = name.split(' ').all { it.isNotEmpty() }
 
-fun checkQuestDescription(description: String): Boolean = description.split(' ').all { !it.isEmpty()  }
+
+fun checkQuestDescription(description: String): Boolean = description.split(' ').all { it.isNotEmpty() }
