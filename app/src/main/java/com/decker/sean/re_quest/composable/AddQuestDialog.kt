@@ -3,6 +3,8 @@ package com.decker.sean.re_quest.composable
 import android.R
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -17,10 +19,12 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -37,6 +41,12 @@ fun AddQuestDialog(questViewModel: QuestViewModel, setShowDialog: (Boolean) -> U
     var questDescriptionTxtFieldError by remember { mutableStateOf("") }
     var questNameTxtField by remember { mutableStateOf("") }
     var questDescriptionTxtField by remember { mutableStateOf("") }
+
+    val radioOptions = listOf("Yes", "No")
+    var selectedRadioItem by remember {
+        mutableStateOf(radioOptions[0])
+    }
+    var selectedVisibility = 0
 
     Dialog(
         onDismissRequest = { setShowDialog(false) },
@@ -87,8 +97,6 @@ fun AddQuestDialog(questViewModel: QuestViewModel, setShowDialog: (Boolean) -> U
                             ) // Ends Icon
 
                             Text(
-                                // Switched with uncommented version
-                                //text = currentQuest,
                                 text = "New Quest",
                                 modifier = Modifier.padding(5.dp),
                                 fontSize = 24.sp
@@ -165,7 +173,41 @@ fun AddQuestDialog(questViewModel: QuestViewModel, setShowDialog: (Boolean) -> U
                             minLines = 3
                         ) // Ends quest description text field
 
-                    }//Column of Text Fields
+                        Spacer(modifier = Modifier.height(20.dp))
+
+                        // Visibility radio buttons
+                        Column(modifier = Modifier.selectableGroup()) {
+
+                            Text(
+                                text = "Visible:",
+                                modifier = Modifier.padding(5.dp),
+                                fontSize = 24.sp
+                            ) // Ends Text
+
+                            radioOptions.forEach { label ->
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(56.dp)
+                                        .selectable(
+                                            selected = (selectedRadioItem == label),
+                                            onClick = { selectedRadioItem = label },
+                                            role = Role.RadioButton
+                                        )
+                                        .padding(horizontal = 16.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    RadioButton(
+                                        modifier = Modifier.padding(end = 16.dp),
+                                        selected = (selectedRadioItem == label),
+                                        onClick = null // null recommended for accessibility with screen readers
+                                    )
+                                    Text(text = label)
+                                } // Row
+                            } // Ends radioOptions.forEach
+                        } // Ends radio button column
+
+                    } // Ends Column of Text Fields and Radio Buttons
 
                 } // Ends Column with Top Row and Text Fields
 
@@ -193,12 +235,18 @@ fun AddQuestDialog(questViewModel: QuestViewModel, setShowDialog: (Boolean) -> U
                                 return@Button
                             } // Ends if
 
+                            if (selectedRadioItem == "Yes") {
+                                selectedVisibility = 1
+                            } else if (selectedRadioItem == "No") {
+                                selectedVisibility = 0
+                            } // Ends if
+
                             // Create and insert quest
                             questViewModel.insertQuest(
                                 Quest(
                                     quest_name = questNameTxtField,
                                     quest_description = questDescriptionTxtField,
-                                    quest_visible = 0,
+                                    quest_visible = selectedVisibility,
                                     quest_completed = 0
                                 )
                             ) // Ends insert
@@ -229,4 +277,4 @@ fun AddQuestDialog(questViewModel: QuestViewModel, setShowDialog: (Boolean) -> U
 
 fun checkQuestName(name: String): Boolean = name.split(' ').all { !it.isEmpty()  }
 
-fun checkQuestDescription(description: String): Boolean = description.split(' ').all { !it.isEmpty() }
+fun checkQuestDescription(description: String): Boolean = description.split(' ').all { !it.isEmpty()  }

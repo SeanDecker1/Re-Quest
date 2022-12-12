@@ -23,9 +23,18 @@ fun NavRoutes(questViewModel: QuestViewModel, navController: NavHostController) 
             LoginScreen(navController)
         } // Ends LoginScreen nav
 
-        composable(route = Screens.QuestListScreen.route) {
-            QuestListScreen(questViewModel = questViewModel, navController = navController)
-        } // Ends QuestListScreen nav
+        composable(
+            route = Screens.QuestListScreen.route+"/{userType}",
+            arguments = listOf(
+                navArgument("userType") {
+                    type = NavType.StringType
+                    defaultValue = "player"
+                    nullable = false
+                } // Ends navArgument
+            ) // Ends arguments
+        ) { entry ->
+            QuestListScreen(questViewModel = questViewModel, navController = navController, userType = entry.arguments?.getString("userType"))
+        } // Ends QuestList nav
 
         composable(
             route = Screens.QuestScreen.route+"/{questId}",
