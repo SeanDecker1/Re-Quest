@@ -97,7 +97,6 @@ fun QuestListScreen(questViewModel: QuestViewModel, navController: NavController
                 fontWeight = FontWeight.Bold
             ) // Ends Text
 
-
             // Is user is a game master, they can see this add button
             if (!isPlayer) {
                 IconButton(
@@ -123,7 +122,7 @@ fun QuestListScreen(questViewModel: QuestViewModel, navController: NavController
             items(
                 items = questList.value,
                 itemContent = {
-                    QuestCard(currentQuest = it, navController = navController, userType = insideUserType)
+                    QuestCard(currentQuest = it, navController = navController, userType = insideUserType, questViewModel = questViewModel)
                 }
             ) // Ends items
         } // Ends LazyColumn
@@ -134,7 +133,7 @@ fun QuestListScreen(questViewModel: QuestViewModel, navController: NavController
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun QuestCard(currentQuest: Quest, navController: NavController, userType: Int){
+fun QuestCard(currentQuest: Quest, navController: NavController, userType: Int, questViewModel: QuestViewModel){
 
     var coverArt = R.drawable.dragon
 
@@ -210,17 +209,19 @@ fun QuestCard(currentQuest: Quest, navController: NavController, userType: Int){
                     ) // Ends Text
                 } // Ends Row
 
-                IconButton(
-                    onClick = { /*TODO*/ },
-                ) {
-                    // Inner content including an icon and a text label
-                    Icon(
-                        Icons.Outlined.Delete,
-                        contentDescription = "Delete",
-                    ) // Ends Icon
-                } // Ends Button
-            }//Ends Card Info Row
+                if (userType == 1) {
+                    IconButton(
+                        onClick = { questViewModel.deleteQuestById(currentQuest.quest_id) },
+                    ) {
+                        // Inner content including an icon and a text label
+                        Icon(
+                            Icons.Outlined.Delete,
+                            contentDescription = "Delete",
+                        ) // Ends Icon
+                    } // Ends Button
+                } // Ends if
 
+            }//Ends Card Info Row
 
         } // Ends Column
 
