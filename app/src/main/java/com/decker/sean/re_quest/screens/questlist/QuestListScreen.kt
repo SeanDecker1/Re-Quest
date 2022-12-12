@@ -24,6 +24,7 @@ import androidx.compose.foundation.Image
 
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.rounded.AccountCircle
 
 import androidx.compose.runtime.State
@@ -119,7 +120,7 @@ fun QuestListScreen(questViewModel: QuestViewModel, navController: NavController
             items(
                 items = questList.value,
                 itemContent = {
-                    QuestCard(currentQuest = it, navController = navController, coverArt = R.drawable.tree)
+                    QuestCard(currentQuest = it, navController = navController)
                 }
             ) // Ends items
         } // Ends LazyColumn
@@ -179,27 +180,44 @@ fun QuestCard(currentQuest: Quest, navController: NavController){
                 modifier = Modifier
                     .height(50.dp)
                     .padding(8.dp)
-                    .background(color = Color.White),
-                horizontalArrangement = Arrangement.Start,
+                    .background(color = Color.White)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    Icons.Outlined.HistoryEdu,
-                    contentDescription = "Quest",
-                    modifier = Modifier
-                        .padding(0.dp)
-                        .size(30.dp),
-                ) // Ends Icon
+            ){
+                Row(
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Outlined.HistoryEdu,
+                        contentDescription = "Quest",
+                        modifier = Modifier
+                            .padding(0.dp)
+                            .size(30.dp),
+                    ) // Ends Icon
 
-                Text(
-                    text = currentQuest.quest_name ?: "",
-                    modifier = Modifier.padding(5.dp),
-                    style = MaterialTheme.typography.button.copy(
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
-                    ) // Ends style
-                ) // Ends Text
-            } // Ends Row
+                    Text(
+                        text = currentQuest.quest_name ?: "",
+                        modifier = Modifier.padding(5.dp),
+                        style = MaterialTheme.typography.button.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black
+                        ) // Ends style
+                    ) // Ends Text
+                } // Ends Row
+
+                IconButton(
+                    onClick = { /*TODO*/ },
+                ) {
+                    // Inner content including an icon and a text label
+                    Icon(
+                        Icons.Outlined.Delete,
+                        contentDescription = "Delete",
+                    ) // Ends Icon
+                } // Ends Button
+            }//Ends Card Info Row
+
 
         } // Ends Column
 
